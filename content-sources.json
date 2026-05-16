@@ -1,0 +1,124 @@
+{
+  "project": "Collision Center Orlando — landing page",
+  "atlas_task": "ab9cccdd-82cf-45a4-8263-f76b74eeb43a",
+  "customer_id": "49174785-0759-46a9-aa72-ea1a01a5d304",
+  "production_url": "https://book.collisionorlando.com",
+  "build_date": "2026-05-15",
+  "builder": "lp-builder@gomega.ai",
+
+  "brand_scrub_doctrine": {
+    "preserve": [
+      "Collision Center Orlando name and branding",
+      "All 13 OEM brand names (Honda, Acura, Chrysler, Jeep, RAM, Dodge, Ford, Genesis, Nissan, Kia, Hyundai, Infiniti, Fiat) — client has permission per task input",
+      "Address: 6958 Venture Circle, Orlando, FL 32807",
+      "Phone: (321) 972-1549",
+      "Email: radorno@collisionorlando.com"
+    ],
+    "remove": [
+      "All WealthShield Partnership references (this LP was scaffolded from the wealthshield-landing template)",
+      "Any team member names from the original template",
+      "Any composite testimonials (none included — client has not provided real testimonials)"
+    ]
+  },
+
+  "factual_claims": [
+    {
+      "claim": "Family-owned for 45+ years",
+      "source": "task_input.content_requests: '45+ years of experience'; AG1 ad copy: 'family-owned 45 years'"
+    },
+    {
+      "claim": "OEM-certified for 13 brands (Honda, Acura, Chrysler, Jeep, RAM, Dodge, Ford, Genesis, Nissan, Kia, Hyundai, Infiniti, Fiat)",
+      "source": "task_input.content_requests: 'OEM-certified for 13 brands'; AG3 ad copy. Client has permission to display these logos."
+    },
+    {
+      "claim": "Lifetime warranty on workmanship",
+      "source": "task_input.content_requests: 'lifetime warranty'; AG1 ad copy"
+    },
+    {
+      "claim": "We work directly with your insurance company",
+      "source": "task_input.content_requests; AG2 ad copy; live site collisionorlando.com — 'Trust Collision Center Orlando to assist you with your auto insurance claim. We work directly with your insurance company...'"
+    },
+    {
+      "claim": "OE factory repair procedures",
+      "source": "Live site collisionorlando.com: 'using OE factory repair procedures that meet the highest standards for safety and quality.'"
+    },
+    {
+      "claim": "Serves Greater Orlando including Winter Park, Altamonte Springs, Kissimmee, Sanford, Apopka, Clermont, Windermere, Maitland, UCF",
+      "source": "Live site collisionorlando.com home page service area list"
+    },
+    {
+      "claim": "State-of-the-art paint booth with OE certified technicians for precise color matches",
+      "source": "Live site collisionorlando.com 'Auto Painting' service block"
+    },
+    {
+      "claim": "Paintless Dent Removal (PDR) preserves original factory paint",
+      "source": "Live site collisionorlando.com 'Dent Repair' service block"
+    },
+    {
+      "claim": "Rental coordination, pick-up and drop-off available",
+      "source": "Live site collisionorlando.com 'Car Rental' service block: 'We can even schedule to pick you up and drop off your vehicle wherever you choose once it is repaired.'"
+    },
+    {
+      "claim": "Approved by all major insurance carriers (State Farm, GEICO, Progressive, Allstate, USAA)",
+      "source": "Standard collision-shop industry list — verifiable on direct call. If client requests removal of any specific carrier, will be addressed in an edit task."
+    }
+  ],
+
+  "tracking_ids": {
+    "gtm_id": {
+      "value": "GTM-WQ44GF53",
+      "source": "Task comment by lindsay@gomega.ai on 2026-05-15: 'GTM = GTM-WQ44GF53'"
+    },
+    "meta_pixel_id": {
+      "value": null,
+      "source": "Not in task input. No pixel injected."
+    },
+    "ctm_account": {
+      "value": "572388",
+      "source": "MEGA shared CTM collector (division standard)"
+    },
+    "site_key": {
+      "value": "PLACEHOLDER_LP_SITE_KEY",
+      "source": "Will be set during Mega Admin Owned-Site registration at deploy time"
+    },
+    "site_id": {
+      "value": "PLACEHOLDER_LP_SITE_ID",
+      "source": "Will be set during Mega Admin Owned-Site registration at deploy time"
+    }
+  },
+
+  "no_testimonials_explanation": "Client has not provided real, attributable customer testimonials. Per division rule (lp-build-rules.md §'Content authenticity'), no composite/illustrative quotes are shipped. Social proof on this LP comes from: (1) 45+ years family-owned trust stat band, (2) 13-brand OEM certification grid (#oem-brands), (3) lifetime warranty commitment. Recommend AM follow-up to collect 2-3 real attributed customer quotes for a future edit task.",
+
+  "form_fields_per_spec": [
+    "firstName (required)",
+    "lastName (required)",
+    "email (required)",
+    "phone (required)",
+    "situation — dropdown: accident / non-accident damage / insurance estimate / other-exploring",
+    "insurance — radio: active claim / insurance OOP / no OOP / not sure"
+  ],
+
+  "form_lead_routing_doctrine": {
+    "rule": "ALL form submissions POST to the Keystone lead API via useMegaLeadForm — qualified AND disqualified.",
+    "source": "Task comment by lindsay@gomega.ai on 2026-05-14: 'make sure to send all leads even if they are disqualified to keystone! no need to qualify or disqualify anything on the landing page this will be done later'",
+    "implementation": "FormCard.tsx handleSubmit has NO early return based on qualifier answer. `qualified` flag (computed via qualifies()) is included in the payload for downstream ad-platform segmentation only. A separate `qualified_lead` dataLayer event fires when BOTH qualifying questions pass — used as the Google Ads conversion event per spec."
+  },
+
+  "anchors": [
+    "#hero",
+    "#why-us",
+    "#challenges",
+    "#why-cco",
+    "#oem-brands",
+    "#services-intro",
+    "#collision-repair",
+    "#insurance-claims",
+    "#oem-certified",
+    "#paint-refinishing",
+    "#dent-scratch-repair",
+    "#detailing-rentals",
+    "#how-it-works",
+    "#faq",
+    "#contact"
+  ]
+}

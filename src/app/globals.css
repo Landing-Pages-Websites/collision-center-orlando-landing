@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* Collision Center Orlando — Brand tokens
+ * Per task spec: blue, white, light gray. Pulled real navy from live site
+ * (collisionorlando.com — Avada theme primary; sampled #0F2A4A range) with
+ * a brighter electric-blue accent for CTAs (#1E5BBF). Light gray surface
+ * for alternating sections (#F4F6F8) and warm white base (#FFFFFF).
+ */
+@theme {
+  /* CTA / primary button — electric blue */
+  --color-primary: #1E5BBF;
+  --color-primary-hover: #164a9c;
+  --color-primary-50: #eaf1fc;
+  --color-primary-100: #c5d9f5;
+  --color-primary-200: #9bbfeb;
+  --color-primary-700: #0f3a85;
+
+  /* Headings + dark sections — deep navy */
+  --color-accent: #0F2A4A;
+  --color-accent-hover: #0a1f38;
+  --color-accent-800: #061626;
+
+  /* Gold replaced with a steel/silver accent for an automotive feel */
+  --color-gold: #1E5BBF;
+  --color-gold-hover: #164a9c;
+  --color-gold-50: #eaf1fc;
+  --color-gold-100: #c5d9f5;
+
+  /* Surface */
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F4F6F8;       /* light gray alternating section bg */
+  --color-surface-cool: #E5EAF0;      /* form inset / deeper card */
+  --color-surface-dark: #0F2A4A;      /* dark section bg — deep navy */
+  --color-ink: #0F2A4A;
+  --color-ink-muted: #4a5a6e;
+  --color-ink-on-dark: rgba(255, 255, 255, 0.92);
+  --color-line: #e2e6ec;
+  --color-line-cool: #ccd3dc;
+
+  /* Fonts (variable set by next/font in layout.tsx) */
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-inter);
+}
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #0F2A4A;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-playfair), Georgia, serif;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  font-optical-sizing: auto;
+  font-variation-settings: normal;
+}
+
+/* Smooth scroll + scroll-padding so the fixed header doesn't hide anchor targets */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* Eyebrow label */
+.eyebrow {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--color-primary);
+}
+
+.eyebrow-on-dark {
+  color: var(--color-gold-100);
+}
+
+/* Dark sections — subtle pinstripe for premium feel */
+.bg-pinstripe-navy {
+  background-color: var(--color-surface-dark);
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.025) 0px,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 18px
+    );
+}
+
+/* Subtle brand blue accent underline */
+.heading-rule::after {
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 3px;
+  background: var(--color-primary);
+  margin-top: 1rem;
+  border-radius: 2px;
+}
+
+.heading-rule-on-dark::after {
+  background: var(--color-gold-100);
+}
+
+/* bg-paper = alternating light gray */
+.bg-paper {
+  background-color: var(--color-surface-alt);
+}
+
+/* Serif display variant helper */
+.font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
