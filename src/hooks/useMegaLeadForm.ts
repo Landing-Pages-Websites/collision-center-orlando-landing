@@ -12,7 +12,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 const DEFAULTS = {
   CUSTOMER_ID: "49174785-0759-46a9-aa72-ea1a01a5d304", // Collision Center Orlando
-  SITE_ID: "PLACEHOLDER_LP_SITE_ID", // Mega Admin Owned-Site row — set during deploy site registration
+  SITE_ID: "dcad5c9b-cc69-425f-8237-bfcbba5f235e", // Mega Admin MEGA_LANDING_PAGE site row (registered 2026-05-16)
   ENDPOINT: "https://analytics.gomega.ai/submission/submit",
 };
 

@@ -26,8 +26,8 @@ const inter = Inter({
 // - No Meta Pixel in task input → no pixelId injected.
 // - CTM script: account 572388 (MEGA shared collector).
 
-const SITE_KEY = "PLACEHOLDER_LP_SITE_KEY";
-const SITE_ID = "PLACEHOLDER_LP_SITE_ID";
+const SITE_KEY = "dlwke52xg2w4lb2f";
+const SITE_ID = "dcad5c9b-cc69-425f-8237-bfcbba5f235e";
 const GTM_ID = "GTM-WQ44GF53";
 
 export const metadata: Metadata = {
