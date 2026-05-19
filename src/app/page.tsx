@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingCTA } from "@/components/FloatingCTA";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { BrandTrustSection } from "@/components/sections/BrandTrustSection";
 import { StatsSection } from "@/components/sections/StatsSection";
 import { PainSection } from "@/components/sections/PainSection";
 import { AuthoritySection } from "@/components/sections/AuthoritySection";
@@ -35,11 +36,15 @@ export default function Page() {
       <Header />
       <main className="flex-1">
         <HeroSection />
+        {/* Above-fold trust bar: 13 OEM brand-logo marquee (2026-05-19) */}
+        <BrandTrustSection />
         <StatsSection />
         <PainSection />
         <AuthoritySection />
-        <OEMBrandsSection />
         <ServicesSection />
+        {/* Cert-plaque marquee — sits after the services block where the
+            OEM-certified service detail row provides context (2026-05-19). */}
+        <OEMBrandsSection />
         <ProcessSection />
         <FAQSection />
         <ContactSection />
