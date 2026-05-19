@@ -1,25 +1,49 @@
+import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
 import { PrimaryCTA } from "@/components/PrimaryCTA";
-import { OEM_BRANDS } from "@/lib/content";
+import { OEM_BRAND_LOGOS, OEM_CERT_BADGES } from "@/lib/content";
 
 /**
- * OEM brand certifications band — task spec requires prominent display.
- * Client confirmed permission to use these brand names.
+ * OEM brand certifications band — Peter design feedback 2026-05-18.
+ *
+ * Two horizontal infinite marquees:
+ *   1. The 13 OEM brand logos (real SVG marks, simpleicons.org + Wikimedia
+ *      Commons, all redistributable). Renders white on the navy band,
+ *      with a hover-pause + faded edges for a clean loop.
+ *   2. The 7 real cert-plaque photographs from the client's live site,
+ *      in a second slower marquee for additional credibility.
+ *
+ * Replaces the prior static text-pill grid. Compliance disclaimer
+ * ("OEM brand logos used with permission") is restated below the carousel
+ * — it's already present in the hero/footer copy too.
+ *
+ * All motion respects prefers-reduced-motion: reduce (see globals.css).
+ *
  * Section ID: #oem-brands
  */
 export function OEMBrandsSection() {
+  // Duplicate the array inline so the keyframe translate of -50% loops
+  // seamlessly.
+  const logosDuplicated = [...OEM_BRAND_LOGOS, ...OEM_BRAND_LOGOS];
+  const certsDuplicated = [...OEM_CERT_BADGES, ...OEM_CERT_BADGES];
+
   return (
     <section
       id="oem-brands"
-      className="bg-[var(--color-surface)] py-20 lg:py-28 border-b border-[var(--color-line)]"
+      className="bg-[var(--color-accent)] text-white py-20 lg:py-28 border-b border-[var(--color-accent-800)] relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      {/* Ambient navy pinstripe */}
+      <div className="absolute inset-0 bg-pinstripe-navy opacity-80" />
+      {/* Brand-blue glow accent */}
+      <div className="pointer-events-none absolute -top-24 right-[-10%] w-[28rem] h-[28rem] rounded-full bg-[var(--color-primary)]/25 blur-[140px]" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <Reveal className="max-w-3xl">
-          <p className="eyebrow">OEM-certified for 13 brands</p>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-[var(--color-accent)] leading-tight heading-rule">
+          <p className="eyebrow eyebrow-on-dark">OEM-certified for 13 brands</p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight heading-rule heading-rule-on-dark">
             Manufacturer-certified to repair the brands Orlando drives.
           </h2>
-          <p className="mt-6 text-lg text-[var(--color-ink-muted)] leading-relaxed">
+          <p className="mt-6 text-lg text-white/85 leading-relaxed">
             OEM certification means the manufacturer has audited our facility,
             trained our technicians, and authorized our procedures. We&apos;re
             certified for the following brands — and we repair every other
@@ -28,29 +52,86 @@ export function OEMBrandsSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-          {OEM_BRANDS.map((brand, i) => (
-            <Reveal key={brand} delay={i * 30}>
-              <div className="bg-white border border-[var(--color-line)] rounded-xl px-5 py-5 flex items-center justify-center text-center hover:border-[var(--color-primary)]/40 hover:shadow-sm transition">
-                <span className="font-display text-lg sm:text-xl font-semibold text-[var(--color-accent)] tracking-tight">
-                  {brand}
-                </span>
-              </div>
-            </Reveal>
-          ))}
+        {/* Brand logo marquee */}
+        <div
+          className="mt-12 lg:mt-14 marquee-fade"
+          role="region"
+          aria-label="OEM brand certifications"
+        >
+          <ul
+            className="marquee-track items-center gap-12 lg:gap-16 py-2"
+            aria-hidden="false"
+          >
+            {logosDuplicated.map((logo, i) => (
+              <li
+                key={`${logo.name}-${i}`}
+                className="shrink-0 flex items-center justify-center"
+                aria-hidden={i >= OEM_BRAND_LOGOS.length}
+              >
+                <span className="sr-only">{logo.name}</span>
+                <Image
+                  src={logo.src}
+                  alt={`${logo.name} logo`}
+                  width={120}
+                  height={48}
+                  className="h-10 lg:h-12 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+                  style={{
+                    filter: "brightness(0) invert(1)",
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
 
+        {/* Cert-badge marquee (slower) */}
         <Reveal>
-          <p className="mt-8 text-sm text-[var(--color-ink-muted)] max-w-3xl">
+          <div
+            className="mt-12 lg:mt-16 marquee-fade"
+            role="region"
+            aria-label="OEM certification badges"
+          >
+            <p className="text-xs uppercase tracking-[0.2em] text-white/60 mb-5 text-center">
+              Real certification plaques from our shop
+            </p>
+            <ul
+              className="marquee-track marquee-track--slow items-center gap-10 lg:gap-14 py-2"
+            >
+              {certsDuplicated.map((cert, i) => (
+                <li
+                  key={`${cert.name}-${i}`}
+                  className="shrink-0 flex items-center justify-center"
+                  aria-hidden={i >= OEM_CERT_BADGES.length}
+                >
+                  <span className="sr-only">{cert.name}</span>
+                  <Image
+                    src={cert.src}
+                    alt={cert.name}
+                    width={120}
+                    height={120}
+                    className="h-20 lg:h-24 w-auto object-contain rounded-md bg-white/95 p-2"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <p className="mt-10 text-sm text-white/70 max-w-3xl">
             Don&apos;t see your make? We service all makes and models —
             including European luxury vehicles like BMW, Mercedes-Benz, Audi,
             Lexus, Volvo, and more. Call us with your make and model for a
             free repair estimate.
           </p>
+          <p className="mt-2 text-xs text-white/55 italic max-w-3xl">
+            OEM brand logos used with permission. All trademarks are the
+            property of their respective owners.
+          </p>
         </Reveal>
 
         <Reveal>
-          <PrimaryCTA />
+          <PrimaryCTA variant="onDark" align="start" className="mt-6" />
         </Reveal>
       </div>
     </section>

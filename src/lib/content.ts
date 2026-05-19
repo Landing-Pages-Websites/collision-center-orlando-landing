@@ -53,12 +53,20 @@ export const BRAND = {
   ctaSubLabel: "Free estimate · We handle the insurance",
 } as const;
 
-// Trust band stats — sourced from live collisionorlando.com about/services + task spec
-export const STATS: { value: string; label: string }[] = [
-  { value: "45+ yrs", label: "Family-owned Orlando collision experts" },
-  { value: "13", label: "OEM brand certifications, including luxury imports" },
-  { value: "Lifetime", label: "Warranty on every collision repair" },
-  { value: "All", label: "Makes and models repaired to factory spec" },
+// Trust band stats — sourced from live collisionorlando.com about/services + task spec.
+// `countTo` drives the count-up animation in StatsSection. `prefix`/`suffix` wrap the
+// animated number; `staticValue` is used for non-numeric stats (e.g. "Lifetime").
+export const STATS: {
+  staticValue?: string;
+  countTo?: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+}[] = [
+  { countTo: 45, suffix: "+ yrs", label: "Family-owned Orlando collision experts" },
+  { countTo: 13, label: "OEM brand certifications, including luxury imports" },
+  { staticValue: "Lifetime", label: "Warranty on every collision repair" },
+  { staticValue: "All", label: "Makes and models repaired to factory spec" },
 ];
 
 // "Why drivers are stressed" framing — sourced from the AG1/AG2/AG3 ad copy
@@ -84,7 +92,9 @@ export const PAIN_POINTS: {
   },
 ];
 
-// OEM brand certifications — from task spec (client has permission to display)
+// OEM brand certifications — from task spec (client has permission to display).
+// Used by the legacy text-pill list (kept as a fallback / aria reference) and the
+// new logo marquee, which uses OEM_BRAND_LOGOS below.
 export const OEM_BRANDS: string[] = [
   "Honda",
   "Acura",
@@ -99,6 +109,39 @@ export const OEM_BRANDS: string[] = [
   "Hyundai",
   "Infiniti",
   "Fiat",
+];
+
+// OEM brand logo paths — added 2026-05-18 for the moving carousel.
+// SVG sources: simpleicons.org (CC0) for 11 brands, Wikimedia Commons (CC/PD) for
+// Dodge + Genesis. All are vector wordmarks/marks; no Wikipedia FUR-only images.
+// Hero copy already carries the "OEM brand logos used with permission" disclaimer.
+export const OEM_BRAND_LOGOS: { name: string; src: string }[] = [
+  { name: "Honda", src: "/logos/honda.svg" },
+  { name: "Acura", src: "/logos/acura.svg" },
+  { name: "Chrysler", src: "/logos/chrysler.svg" },
+  { name: "Jeep", src: "/logos/jeep.svg" },
+  { name: "RAM", src: "/logos/ram.svg" },
+  { name: "Dodge", src: "/logos/dodge.svg" },
+  { name: "Ford", src: "/logos/ford.svg" },
+  { name: "Genesis", src: "/logos/genesis.svg" },
+  { name: "Nissan", src: "/logos/nissan.svg" },
+  { name: "Kia", src: "/logos/kia.svg" },
+  { name: "Hyundai", src: "/logos/hyundai.svg" },
+  { name: "Infiniti", src: "/logos/infiniti.svg" },
+  { name: "Fiat", src: "/logos/fiat.svg" },
+];
+
+// OEM cert badges — real photographs of the certificate plaques pulled from
+// the client's live site. Rendered in a second, slower marquee under the
+// brand-logo marquee for additional credibility.
+export const OEM_CERT_BADGES: { name: string; src: string }[] = [
+  { name: "Kia Certified", src: "/logos/certs/kia.jpg" },
+  { name: "Genesis Certified", src: "/logos/certs/genesis.jpg" },
+  { name: "Nissan Certified", src: "/logos/certs/nissan.jpg" },
+  { name: "Hyundai Certified", src: "/logos/certs/hyundai.jpg" },
+  { name: "FCA Certified", src: "/logos/certs/fca.jpg" },
+  { name: "Infiniti Certified", src: "/logos/certs/infiniti.jpg" },
+  { name: "OEC Certified", src: "/logos/certs/oec.jpg" },
 ];
 
 // Per-service sections — each gets its own anchor, H3, and 80-150 word body

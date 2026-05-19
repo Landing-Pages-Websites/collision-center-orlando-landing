@@ -4,12 +4,23 @@ import Image from "next/image";
 import { FormCard } from "@/components/FormCard";
 import { PrimaryCTA } from "@/components/PrimaryCTA";
 import { Reveal } from "@/components/Reveal";
-import { BRAND } from "@/lib/content";
 
 /**
  * Hero — split layout, form on the right above the fold.
- * Background: hero shop photo (provided by client via task attachment),
- * overlaid with deep-navy gradient for readable white headline.
+ *
+ * Background: real shop-photo (blue sedan in the bay, sourced from the
+ * client's live site at collisionorlando.com). Overlaid with a deep-navy
+ * gradient so the white headline stays readable. NO text is baked into the
+ * image — every word is HTML so it's editable, accessible, and indexable.
+ * (Replaces the prior hero.png which was a screenshot of the client's
+ * WordPress homepage with "Skip to Content" baked in — Peter design
+ * feedback 2026-05-18.)
+ *
+ * Mobile: the photo is dimmed further (opacity 0.30) so the form stays the
+ * focal point above the fold.
+ *
+ * Motion: two ambient accent glows drift in a slow 9-11s ease loop — gated
+ * behind prefers-reduced-motion: reduce in globals.css.
  */
 export function HeroSection() {
   return (
@@ -20,20 +31,31 @@ export function HeroSection() {
       {/* Background photo + navy overlay */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/hero.png"
-          alt="Collision Center Orlando shop interior"
+          src="/images/blue-car.jpg"
+          alt="A blue sedan being repaired in the Collision Center Orlando shop bay"
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="object-cover opacity-30 sm:opacity-50 lg:opacity-60"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-accent)]/95 via-[var(--color-accent)]/85 to-[var(--color-accent)]/55" />
+        {/* Navy gradient overlay — deeper on the left where the headline sits */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-accent)]/95 via-[var(--color-accent)]/80 to-[var(--color-accent)]/55" />
+        {/* Pinstripe texture for premium feel */}
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
               "repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 18px)",
           }}
+        />
+        {/* Ambient drifting glows (motion gated by reduced-motion) */}
+        <div
+          aria-hidden="true"
+          className="hero-glow-a pointer-events-none absolute -top-32 -left-32 w-[36rem] h-[36rem] rounded-full bg-[var(--color-primary)]/30 blur-[140px]"
+        />
+        <div
+          aria-hidden="true"
+          className="hero-glow-b pointer-events-none absolute -bottom-40 right-[-10%] w-[40rem] h-[40rem] rounded-full bg-[var(--color-gold-100)]/15 blur-[160px]"
         />
       </div>
 

@@ -6,7 +6,16 @@ type Props = {
   children: React.ReactNode;
   className?: string;
   delay?: number; // ms
-  as?: "div" | "section" | "article" | "header" | "footer" | "main";
+  as?:
+    | "div"
+    | "section"
+    | "article"
+    | "header"
+    | "footer"
+    | "main"
+    | "li"
+    | "ul"
+    | "ol";
 };
 
 export function Reveal({
@@ -49,7 +58,10 @@ export function Reveal({
 
   return (
     <Tag
-      ref={ref as React.RefObject<HTMLDivElement>}
+      // The intersection-observer ref accepts any Element; cast through any so
+      // we can use a single hook regardless of the host tag (div/li/section/…).
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ref={ref as any}
       className={`${style} ${className}`}
     >
       {children}

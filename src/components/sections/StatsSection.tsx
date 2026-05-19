@@ -1,9 +1,15 @@
+"use client";
+
 import { Reveal } from "@/components/Reveal";
+import { useCountUp } from "@/hooks/useCountUp";
 import { STATS } from "@/lib/content";
 
 /**
  * Trust-stat band — sits directly under hero. Why drivers choose us.
  * ID: #why-us
+ *
+ * Numeric stats animate count-up on scroll-into-view (useCountUp).
+ * Reduced-motion users see the final value immediately.
  */
 export function StatsSection() {
   return (
@@ -22,16 +28,8 @@ export function StatsSection() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)] rounded-2xl overflow-hidden">
           {STATS.map((stat, i) => (
-            <Reveal key={stat.value} delay={i * 80}>
-              <div className="bg-[var(--color-surface)] p-6 sm:p-8 h-full flex flex-col">
-                <div className="font-display text-3xl sm:text-[2.5rem] lg:text-[2.8rem] font-semibold text-[var(--color-accent)] tracking-tight leading-none">
-                  {stat.value}
-                </div>
-                <div className="mt-1 h-0.5 w-8 bg-[var(--color-primary)]" />
-                <p className="mt-3 text-sm text-[var(--color-ink-muted)] leading-snug">
-                  {stat.label}
-                </p>
-              </div>
+            <Reveal key={stat.label} delay={i * 100}>
+              <StatCell stat={stat} />
             </Reveal>
           ))}
         </div>
@@ -45,5 +43,28 @@ export function StatsSection() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+function StatCell({ stat }: { stat: (typeof STATS)[number] }) {
+  // For numeric stats, animate from 0 → countTo on scroll-into-view.
+  const { ref, value } = useCountUp(stat.countTo ?? 0);
+  const display = stat.staticValue
+    ? stat.staticValue
+    : `${stat.prefix ?? ""}${value}${stat.suffix ?? ""}`;
+
+  return (
+    <div
+      ref={ref}
+      className="bg-[var(--color-surface)] p-6 sm:p-8 h-full flex flex-col"
+    >
+      <div className="font-display text-3xl sm:text-[2.5rem] lg:text-[2.8rem] font-semibold text-[var(--color-accent)] tracking-tight leading-none tabular-nums">
+        {display}
+      </div>
+      <div className="mt-1 h-0.5 w-8 bg-[var(--color-primary)]" />
+      <p className="mt-3 text-sm text-[var(--color-ink-muted)] leading-snug">
+        {stat.label}
+      </p>
+    </div>
   );
 }

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FormCard } from "@/components/FormCard";
 import { Reveal } from "@/components/Reveal";
 import { BRAND } from "@/lib/content";
@@ -8,8 +9,20 @@ export function ContactSection() {
       id="contact"
       className="relative overflow-hidden bg-[var(--color-accent)] text-white py-20 lg:py-28"
     >
+      {/* Subtle shop-exterior photograph behind the gradient — adds depth
+          without competing with the form (Peter design feedback 2026-05-18). */}
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/images/shop-exterior.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          aria-hidden="true"
+          className="object-cover opacity-20"
+        />
+      </div>
       {/* Ambient glows + pinstripe */}
-      <div className="absolute inset-0 -z-0 bg-pinstripe-navy" />
+      <div className="absolute inset-0 -z-0 bg-pinstripe-navy opacity-80" />
       <div className="pointer-events-none absolute inset-0 -z-0">
         <div className="absolute top-0 -left-32 w-[32rem] h-[32rem] rounded-full bg-[var(--color-primary)]/15 blur-[120px]" />
       </div>

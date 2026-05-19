@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
 import { PrimaryCTA } from "@/components/PrimaryCTA";
 import { SERVICES } from "@/lib/content";
@@ -9,7 +10,30 @@ import { SERVICES } from "@/lib/content";
  * Six offerings: Collision Repair, Insurance Claims, OEM Certified,
  * Paint & Refinishing, Dent & Scratch, Detailing & Rentals. Alternates
  * navy/paper to break visual rhythm.
+ *
+ * Updated 2026-05-18 (Peter design feedback):
+ *  - Three of the service sections now include a real shop photograph
+ *    (collision repair / OEM certified / paint refinishing) sourced from
+ *    the client's live site, each used exactly once on the page.
+ *  - Outcome chips stagger-reveal on intersection (80ms delay each).
+ *  - Cards pick up a hover lift via the .lift-on-hover utility.
  */
+
+const SERVICE_IMAGES: Record<string, { src: string; alt: string }> = {
+  "collision-repair": {
+    src: "/images/exterior-3.jpg",
+    alt: "Vehicles being staged for collision repair outside the Collision Center Orlando shop",
+  },
+  "oem-certified": {
+    src: "/images/assure-performance.jpg",
+    alt: "Assure Performance Certified Network plaque awarded to Collision Center Orlando",
+  },
+  "paint-refinishing": {
+    src: "/images/spraybooth.jpg",
+    alt: "Paint and refinishing booth at Collision Center Orlando",
+  },
+};
+
 export function ServicesSection() {
   return (
     <>
@@ -40,6 +64,7 @@ export function ServicesSection() {
 
       {SERVICES.map((service, idx) => {
         const dark = idx % 2 === 1;
+        const photo = SERVICE_IMAGES[service.slug];
         return (
           <section
             key={service.slug}
@@ -57,7 +82,13 @@ export function ServicesSection() {
               </div>
             )}
 
-            <div className="relative max-w-5xl mx-auto px-4 sm:px-6 z-10">
+            <div
+              className={
+                photo
+                  ? "relative max-w-6xl mx-auto px-4 sm:px-6 z-10 grid lg:grid-cols-[1fr_1fr] gap-10 lg:gap-14 items-center"
+                  : "relative max-w-5xl mx-auto px-4 sm:px-6 z-10"
+              }
+            >
               <Reveal className="space-y-5">
                 <p className={`eyebrow ${dark ? "eyebrow-on-dark" : ""}`}>
                   {service.label}
@@ -79,10 +110,12 @@ export function ServicesSection() {
                 </p>
 
                 <ul className="grid sm:grid-cols-3 gap-3 pt-3">
-                  {service.outcomes.map((o) => (
-                    <li
+                  {service.outcomes.map((o, oi) => (
+                    <Reveal
+                      as="li"
                       key={o}
-                      className={`flex items-start gap-3 rounded-lg border px-4 py-3 ${
+                      delay={oi * 90}
+                      className={`flex items-start gap-3 rounded-lg border px-4 py-3 lift-on-hover ${
                         dark
                           ? "border-white/15 bg-white/[0.04] text-white/95"
                           : "border-[var(--color-line)] bg-white text-[var(--color-ink)]"
@@ -109,7 +142,7 @@ export function ServicesSection() {
                         </svg>
                       </span>
                       <span className="text-sm leading-snug">{o}</span>
-                    </li>
+                    </Reveal>
                   ))}
                 </ul>
 
@@ -119,6 +152,29 @@ export function ServicesSection() {
                   className="mt-6"
                 />
               </Reveal>
+
+              {photo && (
+                <Reveal delay={120} className="order-first lg:order-last">
+                  <div
+                    className={`relative aspect-[5/4] rounded-2xl overflow-hidden shadow-lg ${
+                      dark
+                        ? "ring-1 ring-white/10"
+                        : "border border-[var(--color-line)]"
+                    }`}
+                  >
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      sizes="(min-width: 1024px) 32rem, 100vw"
+                      className="object-cover"
+                    />
+                    {dark && (
+                      <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-accent)]/40 to-transparent" />
+                    )}
+                  </div>
+                </Reveal>
+              )}
             </div>
           </section>
         );

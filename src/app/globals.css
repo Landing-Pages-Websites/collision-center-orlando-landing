@@ -119,3 +119,107 @@ html {
 .font-display {
   font-family: var(--font-playfair), Georgia, serif;
 }
+
+/* ---------------------------------------------------------------
+ * Motion utilities — added 2026-05-18 for Peter design-feedback edit.
+ * - .marquee-track: horizontal infinite marquee. Duplicate the items
+ *   array inline so the track is exactly 200% wide; translating by
+ *   -50% then makes the loop seamless.
+ * - .hero-glow-a / .hero-glow-b: subtle drift on hero accent blobs so
+ *   the hero feels alive without being distracting.
+ * - .stagger-children > * uses CSS-only fallback ordering; the actual
+ *   stagger is driven by <Reveal delay={i*N}> in the React tree.
+ *
+ * All animations are gated behind prefers-reduced-motion: reduce so
+ * accessibility-mode users get a still page.
+ * --------------------------------------------------------------- */
+
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x 36s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track--slow {
+  animation-duration: 56s;
+}
+
+.marquee-track:hover,
+.marquee-track:focus-within {
+  animation-play-state: paused;
+}
+
+/* Fade the marquee edges into the section so the loop is invisible */
+.marquee-fade {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+}
+
+@keyframes hero-glow-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(2.5%, -1.5%, 0) scale(1.06); }
+}
+
+@keyframes hero-glow-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-2%, 2%, 0) scale(1.05); }
+}
+
+.hero-glow-a {
+  animation: hero-glow-a 11s ease-in-out infinite;
+  will-change: transform;
+}
+
+.hero-glow-b {
+  animation: hero-glow-b 9s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Service card hover lift — paired with stagger-reveal via <Reveal delay> */
+.lift-on-hover {
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out,
+    border-color 0.25s ease-out;
+}
+
+.lift-on-hover:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 10px 25px -10px rgba(15, 42, 74, 0.18),
+    0 4px 10px -4px rgba(15, 42, 74, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .marquee-track--slow,
+  .hero-glow-a,
+  .hero-glow-b {
+    animation: none !important;
+    transform: none !important;
+  }
+  .lift-on-hover {
+    transition: none !important;
+  }
+  .lift-on-hover:hover {
+    transform: none !important;
+  }
+}
