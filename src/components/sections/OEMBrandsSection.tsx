@@ -59,26 +59,31 @@ export function OEMBrandsSection() {
           aria-label="OEM brand certifications"
         >
           <ul
-            className="marquee-track items-center gap-12 lg:gap-16 py-2"
+            className="marquee-track items-center gap-8 lg:gap-12 py-2"
             aria-hidden="false"
           >
             {logosDuplicated.map((logo, i) => (
               <li
                 key={`${logo.name}-${i}`}
-                className="shrink-0 flex items-center justify-center"
+                className="shrink-0"
                 aria-hidden={i >= OEM_BRAND_LOGOS.length}
               >
                 <span className="sr-only">{logo.name}</span>
-                <Image
-                  src={logo.src}
-                  alt={`${logo.name} logo`}
-                  width={120}
-                  height={48}
-                  className="h-10 lg:h-12 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
-                  style={{
-                    filter: "brightness(0) invert(1)",
-                  }}
-                />
+                {/* Light tile so brand-color SVGs read clean against the navy
+                    section bg. Spec: grayscale-on-rest + color-on-hover, so
+                    each tile is `grayscale hover:grayscale-0` with a small
+                    lift. The brand-color fills come straight from the SVGs;
+                    no `brightness(0) invert(1)` (banned). text-black is set
+                    for the one logo (Genesis) whose fill uses currentColor. */}
+                <div className="group flex items-center justify-center h-20 w-[160px] lg:w-[180px] rounded-xl bg-white border border-white/15 shadow-sm px-5 text-black grayscale hover:grayscale-0 opacity-90 hover:opacity-100 transition-[filter,opacity,transform] duration-300 hover:-translate-y-0.5">
+                  <Image
+                    src={logo.src}
+                    alt={`${logo.name} logo`}
+                    width={120}
+                    height={48}
+                    className="h-10 lg:h-12 w-auto max-w-[120px] object-contain"
+                  />
+                </div>
               </li>
             ))}
           </ul>
