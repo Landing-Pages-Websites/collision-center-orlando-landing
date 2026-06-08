@@ -50,7 +50,7 @@ export function ServicesSection() {
               id="services-intro-heading"
               className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-[var(--color-accent)] leading-tight heading-rule"
             >
-              Full-service collision repair under one roof.
+              Full-service body shop &amp; collision repair under one roof.
             </h2>
             <p className="mt-6 text-lg text-[var(--color-ink-muted)] leading-relaxed">
               From the first phone call to the moment you drive away, every

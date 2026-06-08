@@ -69,9 +69,9 @@ export function HeroSection() {
           </p>
 
           <h1 className="font-display text-[2.4rem] sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-semibold leading-[1.05] tracking-tight">
-            Your trusted partner for{" "}
+            Your trusted{" "}
             <span className="text-[var(--color-gold-100)]">
-              collision repair
+              auto body shop &amp; collision repair
             </span>
             <br className="hidden sm:inline" /> in Greater Orlando.
           </h1>
