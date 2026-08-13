@@ -18,6 +18,8 @@ type Props = {
   idSuffix?: string;
 };
 
+const submitErrorMessage = `We could not send your request. Please try again, or call us at ${BRAND.phoneDisplay}.`;
+
 /**
  * Collision Center Orlando lead form — fields come EXACTLY from the Atlas task spec
  * (ab9cccdd-82cf-45a4-8263-f76b74eeb43a).
@@ -36,9 +38,13 @@ type Props = {
  * to the lead API. NO early returns based on the qualifier answer.
  *
  * Form submit pattern (SHLY-May-8 doctrine):
- *   - button type="button" + validate-first → formRef.requestSubmit()
- *   - inFlightRef (sync) + submitting/submitted state guards against rapid clicks
- *   - disabled={submitting || submitted}
+ *   - button type="button" + onClick calls doSubmit() DIRECTLY. It never asks the
+ *     form to submit itself, so no native `submit` DOM event is ever dispatched and
+ *     the optimizer cannot beacon a phantom conversion at click time.
+ *   - validate-first inside doSubmit; inFlightRef (sync) + submitting/submitted state
+ *     guard against rapid clicks. disabled={submitting || submitted}
+ *   - Fail-closed: success (setSubmitted + all tracking) is gated on res?.ok === true.
+ *     On any failure we retain the form, surface a retryable error, and fire NO tracking.
  */
 
 function formatPhone(value: string): string {
@@ -71,7 +77,6 @@ export function FormCard({
   idSuffix = "main",
 }: Props) {
   const { submit } = useMegaLeadForm();
-  const formRef = useRef<HTMLFormElement | null>(null);
   // Synchronous guard — state setters are async/batched, so we need a
   // ref-based latch to prevent rapid-click duplicate submissions.
   const inFlightRef = useRef(false);
@@ -85,7 +90,7 @@ export function FormCard({
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const phoneDigits = phone.replace(/\D/g, "");
   const phoneValid = phoneDigits.length === 10;
@@ -97,12 +102,11 @@ export function FormCard({
     situation.length > 0 &&
     insurance.length > 0;
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function doSubmit() {
     if (inFlightRef.current || submitting || submitted) return;
     if (!canSubmit) return;
     inFlightRef.current = true;
-    setError(null);
+    setSubmitError(null);
     setSubmitting(true);
     const isQualified = qualifies(
       situation as SituationValue,
@@ -112,7 +116,7 @@ export function FormCard({
       // Per director mandate 2026-05-14: ALL leads POST to Keystone (qualified or not).
       // The `qualified` flag is carried in the payload for ad-platform segmentation
       // and downstream lead routing — disqualification is NOT handled on the LP.
-      await submit({
+      const res = await submit({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         email: email.trim(),
@@ -121,6 +125,10 @@ export function FormCard({
         insurance,
         qualified: isQualified ? "yes" : "no",
       });
+      // A 2xx body that is not {ok:true} is still a dropped lead.
+      if (res?.ok !== true) {
+        throw new Error("Submission not confirmed by server.");
+      }
       // Fire dataLayer + MegaTag form_submit event (Mega optimizer can't see
       // React-prevented native submit — manual push required).
       if (typeof window !== "undefined") {
@@ -164,21 +172,23 @@ export function FormCard({
           });
         }
       }
+      setSubmitted(true);
     } catch (err) {
       console.error("Form submission failed:", err);
-      setError(
-        "Something went wrong on our end — we also got your info and we'll reach out shortly.",
-      );
+      // The lead would be dropped: surface a retryable error and fire NO tracking,
+      // so we never bill a phantom conversion for a lead that does not exist.
+      setSubmitError(submitErrorMessage);
     } finally {
-      setSubmitted(true);
+      inFlightRef.current = false;
       setSubmitting(false);
     }
   }
 
-  function handleSubmitClick() {
-    if (inFlightRef.current || submitting || submitted) return;
-    if (!canSubmit) return;
-    formRef.current?.requestSubmit();
+  function handleFormKeyDown(e: React.KeyboardEvent<HTMLFormElement>) {
+    if (e.key !== "Enter") return;
+    if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
+    e.preventDefault();
+    void doSubmit();
   }
 
   const wrapperClass =
@@ -227,12 +237,6 @@ export function FormCard({
             {" · "}
             <span className="text-[var(--color-ink-muted)]">{BRAND.hours}</span>
           </p>
-
-          {error && (
-            <p className="text-xs text-[var(--color-ink-muted)]">
-              (Note: {error})
-            </p>
-          )}
         </div>
       </div>
     );
@@ -251,7 +255,12 @@ export function FormCard({
         )}
       </div>
 
-      <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-3.5">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        onKeyDown={handleFormKeyDown}
+        noValidate
+        className="space-y-3.5"
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label htmlFor={`fn-${idSuffix}`} className="sr-only">
@@ -394,9 +403,19 @@ export function FormCard({
           </div>
         </div>
 
+        {submitError && (
+          <p
+            role="alert"
+            aria-live="polite"
+            className="rounded-lg border border-red-300 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-800"
+          >
+            {submitError}
+          </p>
+        )}
+
         <button
           type="button"
-          onClick={handleSubmitClick}
+          onClick={() => void doSubmit()}
           disabled={!canSubmit || submitting || submitted}
           className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-3.5 rounded-lg font-semibold text-base transition shadow-sm mt-2"
         >
