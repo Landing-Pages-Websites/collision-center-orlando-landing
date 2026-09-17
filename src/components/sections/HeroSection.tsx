@@ -79,7 +79,8 @@ export function HeroSection() {
           <p className="text-lg sm:text-xl text-white/85 max-w-prose leading-relaxed">
             Family-owned for over 45 years. OEM-certified for 13 brands. We
             work directly with your insurance and back every repair with a
-            lifetime warranty on workmanship.
+            lifetime warranty on workmanship. We also offer auto painting and
+            refinishing.
           </p>
 
           {/* Trust row */}
